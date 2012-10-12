@@ -10,7 +10,7 @@ namespace BF2redirector
     {
         public static readonly string AssemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-        public static void LockHostsFile()
+        public static void LockHostsFile(Form1 form)
         {
             ProcessStartInfo Info = new ProcessStartInfo();
             Info.UseShellExecute = false;
@@ -20,7 +20,7 @@ namespace BF2redirector
             Info.FileName = Path.Combine(AssemblyPath, "SetACL.exe");
 
             Process gsProcess = Process.Start(Info);
-            gsProcess.StandardOutput.ReadToEnd();
+            form.Output(gsProcess.StandardOutput.ReadToEnd());
         }
 
         public static void UnlockHostsFile()

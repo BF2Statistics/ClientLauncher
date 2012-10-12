@@ -141,10 +141,11 @@
             // 
             this.LogBox.BackColor = System.Drawing.SystemColors.Control;
             this.LogBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.LogBox.Enabled = false;
+            this.LogBox.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.LogBox.Location = new System.Drawing.Point(5, 15);
             this.LogBox.Multiline = true;
             this.LogBox.Name = "LogBox";
+            this.LogBox.ReadOnly = true;
             this.LogBox.Size = new System.Drawing.Size(250, 185);
             this.LogBox.TabIndex = 8;
             // 

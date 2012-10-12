@@ -9,6 +9,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 
 namespace BF2redirector
 {
@@ -29,6 +30,7 @@ namespace BF2redirector
             if (!isStarted)
             {
                 List<string> Lines = new List<string>();
+                List<string> IPs = new List<string>();
 
                 // Clear the output window
                 LogBox.Text = "";
@@ -44,7 +46,7 @@ namespace BF2redirector
                 if (Bf2webCheckbox.Checked)
                 {
                     // Make sure we have a valid IP address in the address box!
-                    string text = Bf2webAddress.Text;
+                    string text = Bf2webAddress.Text.Trim();
                     if (text == "localhost") text = "127.0.0.1";
 
                     if (text.Length < 8)
@@ -64,6 +66,7 @@ namespace BF2redirector
                     }
 
                     Lines.Add(String.Format("{0}      bf2web.gamespy.com", BF2Web));
+                    IPs.Add("bf2web.gamespy.com");
                     Output("- Adding bf2web.gamespy.com redirect to hosts file");
                         
                 }
@@ -72,7 +75,7 @@ namespace BF2redirector
                 if (GpcmCheckbox.Checked)
                 {
                     // Make sure we have a valid IP address in the address box!
-                    string text2 = GpcmAddress.Text; 
+                    string text2 = GpcmAddress.Text.Trim(); 
                     if (text2 == "localhost") text2 = "127.0.0.1";
 
                     if (text2.Length < 8)
@@ -96,6 +99,8 @@ namespace BF2redirector
 
                     Lines.Add(String.Format("{0}      gpcm.gamespy.com", GpcmA));
                     Lines.Add(String.Format("{0}      gpsp.gamespy.com", GpcmA));
+                    IPs.Add("gpcm.gamespy.com");
+                    IPs.Add("gpsp.gamespy.com");
                 }
 
                 Output("- Writting to hosts file...");
@@ -104,10 +109,19 @@ namespace BF2redirector
                 bool error = false;
                 try
                 {
-                    SetACL.UnlockHostsFile();
+                    //SetACL.UnlockHostsFile();
                     Writter.AppendLines(Lines);
-                    SetACL.LockHostsFile();
                     Output("- Success!");
+
+                    // Flush the DNS!
+                    FlushDNS();
+
+                    // Do pings
+                    DoPings(IPs);
+
+                    // Lock the hosts file
+                    Output("- Locking HOSTS file");
+                    //SetACL.LockHostsFile(this);
                 }
                 catch
                 {
@@ -116,9 +130,6 @@ namespace BF2redirector
 
                 if (!error)
                 {
-                    // Flush the DNS!
-                    FlushDNS();
-
                     // Set form data
                     isStarted = true;
                     iButton.Text = "Stop Redirect";
@@ -130,8 +141,11 @@ namespace BF2redirector
             {
                 // Tell the writter to restore the HOSTS file to its
                 // original state
-                Output("- Reverting HOSTS file back to original state");
+                Output("- Unlocking HOSTS file");
                 SetACL.UnlockHostsFile();
+
+                // Restore the original hosts file contents
+                Output("- Restoring HOSTS file back to original state");
                 Writter.Revert();
 
                 // Flush the DNS!
@@ -148,10 +162,13 @@ namespace BF2redirector
         public void Output(string message)
         {
             LogBox.Text += message + Environment.NewLine;
+            LogBox.ScrollToCaret();
+            LogBox.Refresh();
         }
 
         public void FlushDNS()
         {
+            Output("- Flushing DNS Cache");
             ProcessStartInfo Info = new ProcessStartInfo();
             Info.UseShellExecute = false;
             Info.CreateNoWindow = true;
@@ -160,7 +177,23 @@ namespace BF2redirector
             Info.FileName = Path.Combine(Environment.SystemDirectory, "cmd.exe");
 
             Process gsProcess = Process.Start(Info);
-            gsProcess.StandardOutput.ReadToEnd();
+        }
+
+        public void DoPings(List<string> IPs)
+        {
+            foreach (string IP in IPs)
+            {
+                Output("- Pinging " + IP);
+                ProcessStartInfo Info = new ProcessStartInfo();
+                Info.UseShellExecute = false;
+                Info.CreateNoWindow = true;
+                Info.RedirectStandardOutput = true;
+                Info.Arguments = String.Format("/C ping {0}", IP);
+                Info.FileName = Path.Combine(Environment.SystemDirectory, "cmd.exe");
+
+                Process gsProcess = Process.Start(Info);
+                Thread.Sleep(3000);
+            }
         }
     }
 }
