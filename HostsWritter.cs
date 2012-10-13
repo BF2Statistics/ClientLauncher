@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Text;
 
 namespace BF2redirector
 {
@@ -15,7 +16,9 @@ namespace BF2redirector
         {
             this.instance = form;
             HostsFile = Path.Combine(Environment.SystemDirectory, "drivers", "etc", "HOSTS");
+            SetACL.UnlockHostsFile();
 
+            // Try to open the hosts file
             try
             {
                 FileStream stream = File.Open(HostsFile, FileMode.Open);
@@ -27,6 +30,7 @@ namespace BF2redirector
                 throw e;
             }
 
+            // Backup our current HOSTS content for later replacement
             Backup();
         }
 
@@ -36,14 +40,22 @@ namespace BF2redirector
                 Revert();
         }
 
-        public void AppendLines(List<string> lines)
+
+        /// <summary>
+        /// Adds lines to the hosts file
+        /// </summary>
+        /// <param name="lines">An array of [hostname, IP Address]</param>
+        public void AppendLines(Dictionary<string, string> lines)
         {
+            // Remove old gamespy data from the hosts file
+            CheckOldData(lines);
+
             try
             {
                 StreamWriter sw = File.AppendText(HostsFile);
-                foreach (string line in lines)
+                foreach (KeyValuePair<String, String> line in lines)
                 {
-                    sw.WriteLine(line);
+                    sw.WriteLine(String.Format("{0} {1}", line.Value, line.Key));
                 }
                 sw.Flush();
                 sw.Close();
@@ -54,6 +66,9 @@ namespace BF2redirector
             }
         }
 
+        /// <summary>
+        /// Grabs all the data in the hosts file for later restoration
+        /// </summary>
         private void Backup()
         {
             try
@@ -66,6 +81,9 @@ namespace BF2redirector
             }
         }
 
+        /// <summary>
+        /// Restores the HOSTS file original contents
+        /// </summary>
         public void Revert()
         {
             try
@@ -82,6 +100,28 @@ namespace BF2redirector
             {
                 Log(e.Message.ToString());
             }
+        }
+
+        /// <summary>
+        /// Checks for, and removes all old gamespy data from the hosts file
+        /// </summary>
+        private void CheckOldData(Dictionary<string, string> lines)
+        {
+            // Convert old data to a string
+            string data = Encoding.ASCII.GetString(OldData);
+            bool changed = false;
+            foreach (KeyValuePair<String, String> line in lines)
+            {
+                string format = String.Format("{0} {1}", line.Value, line.Key);
+                if (data.IndexOf(format) != -1)
+                {
+                    changed = true;
+                    data.Replace(format + Environment.NewLine, "");
+                }
+            }
+
+            if (changed)
+                OldData = Encoding.ASCII.GetBytes(data);
         }
 
         /// <summary>

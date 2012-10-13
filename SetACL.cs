@@ -20,7 +20,7 @@ namespace BF2redirector
             Info.FileName = Path.Combine(AssemblyPath, "SetACL.exe");
 
             Process gsProcess = Process.Start(Info);
-            form.Output(gsProcess.StandardOutput.ReadToEnd());
+            string m = gsProcess.StandardOutput.ReadToEnd();
         }
 
         public static void UnlockHostsFile()

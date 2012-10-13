@@ -178,6 +178,7 @@
             this.Controls.Add(this.iButton);
             this.Controls.Add(this.GpcmGroupBox);
             this.Controls.Add(this.BF2webGroupBox);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Form1";

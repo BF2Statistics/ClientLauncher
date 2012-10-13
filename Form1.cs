@@ -29,7 +29,7 @@ namespace BF2redirector
         {
             if (!isStarted)
             {
-                List<string> Lines = new List<string>();
+                Dictionary<string, string> Lines = new Dictionary<string, string>();
                 List<string> IPs = new List<string>();
 
                 // Clear the output window
@@ -65,10 +65,9 @@ namespace BF2redirector
                         return;
                     }
 
-                    Lines.Add(String.Format("{0}      bf2web.gamespy.com", BF2Web));
-                    IPs.Add("bf2web.gamespy.com");
-                    Output("- Adding bf2web.gamespy.com redirect to hosts file");
-                        
+                    Lines.Add("BF2web.gamespy.com", BF2Web.ToString());
+                    IPs.Add("BF2web.gamespy.com");
+                    Output("- Adding bf2web.gamespy.com redirect to hosts file");   
                 }
 
                 // First, lets determine what the user wants to redirect
@@ -97,8 +96,8 @@ namespace BF2redirector
                     Output("- Adding gpcm.gamespy.com redirect to hosts file");
                     Output("- Adding gpsp.gamespy.com redirect to hosts file");
 
-                    Lines.Add(String.Format("{0}      gpcm.gamespy.com", GpcmA));
-                    Lines.Add(String.Format("{0}      gpsp.gamespy.com", GpcmA));
+                    Lines.Add("gpcm.gamespy.com", GpcmA.ToString());
+                    Lines.Add("gpsp.gamespy.com", GpcmA.ToString());
                     IPs.Add("gpcm.gamespy.com");
                     IPs.Add("gpsp.gamespy.com");
                 }
@@ -121,7 +120,7 @@ namespace BF2redirector
 
                     // Lock the hosts file
                     Output("- Locking HOSTS file");
-                    //SetACL.LockHostsFile(this);
+                    SetACL.LockHostsFile(this);
                 }
                 catch
                 {
@@ -192,7 +191,7 @@ namespace BF2redirector
                 Info.FileName = Path.Combine(Environment.SystemDirectory, "cmd.exe");
 
                 Process gsProcess = Process.Start(Info);
-                Thread.Sleep(3000);
+                Thread.Sleep(1000);
             }
         }
     }
