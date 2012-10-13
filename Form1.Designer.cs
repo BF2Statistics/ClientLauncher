@@ -249,7 +249,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Form1";
-            this.Text = "BF2 Redirector";
+            this.Text = "BF2 Statistics Launcher";
             this.BF2webGroupBox.ResumeLayout(false);
             this.BF2webGroupBox.PerformLayout();
             this.GpcmGroupBox.ResumeLayout(false);

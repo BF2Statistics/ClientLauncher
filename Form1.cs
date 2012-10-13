@@ -30,7 +30,7 @@ namespace BF2statisticsLauncher
             // Make sure we are in the correct directory!
             if (!File.Exists(Path.Combine(Root, "BF2.exe")))
             {
-                MessageBox.Show("Program must be executed in the Battlefield 2 install directory!", "Battlefield 2 Lanucher Error");
+                MessageBox.Show("Program must be executed in the Battlefield 2 install directory!", "BF2 Statistics Lanucher Error");
                 this.Load += new EventHandler(MyForm_CloseOnStart);
             }
             else
@@ -53,7 +53,7 @@ namespace BF2statisticsLauncher
                 // Make sure we are going to redirect something...
                 if (!Bf2webCheckbox.Checked && !GpcmCheckbox.Checked)
                 {
-                    MessageBox.Show("Please select at least 1 redirect option", "BF2 Redirector Error");
+                    MessageBox.Show("Please select at least 1 redirect option", "BF2 Statistics Launcher Error");
                     return;
                 }
 
@@ -66,7 +66,7 @@ namespace BF2statisticsLauncher
 
                     if (text.Length < 8)
                     {
-                        MessageBox.Show("You must enter an IP address in the Address box!", "BF2 Redirector Error");
+                        MessageBox.Show("You must enter an IP address in the Address box!", "BF2 Statistics Launcher Error");
                         return;
                     }
 
@@ -76,7 +76,7 @@ namespace BF2statisticsLauncher
 
                     if (!BF2WebValid)
                     {
-                        MessageBox.Show("Stats redirect address is invalid.", "BF2 Redirector Error");
+                        MessageBox.Show("Stats redirect address is invalid.", "BF2 Statistics Launcher Error");
                         return;
                     }
 
@@ -94,7 +94,7 @@ namespace BF2statisticsLauncher
 
                     if (text2.Length < 8)
                     {
-                        MessageBox.Show("You must enter an IP address in the Address box!", "BF2 Redirector Error");
+                        MessageBox.Show("You must enter an IP address in the Address box!", "BF2 Statistics Launcher Error");
                         return;
                     }
 
@@ -104,7 +104,7 @@ namespace BF2statisticsLauncher
 
                     if (!GpcmValid)
                     {
-                        MessageBox.Show("Login Server redirect address is invalid.", "BF2 Redirector Error");
+                        MessageBox.Show("Login Server redirect address is invalid.", "BF2 Statistics Launcher Error");
                         return;
                     }
 
