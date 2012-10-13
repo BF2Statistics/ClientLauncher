@@ -3,7 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BF2redirector
+namespace BF2statisticsLauncher
 {
     class HostsWritter
     {
@@ -134,7 +134,7 @@ namespace BF2redirector
             instance.Output("- [ERROR] " + message);
 
             DateTime datet = DateTime.Now;
-            String logFile = Path.Combine(SetACL.AssemblyPath, "error.log");
+            String logFile = Path.Combine(Form1.Root, "error.log");
             if (!File.Exists(logFile))
             {
                 FileStream files = File.Create(logFile);

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("BF2redirector")]
+[assembly: AssemblyTitle("BF2statisticsLauncher")]
 [assembly: AssemblyDescription("HOSTS modifier for BF2")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Plexis")]
-[assembly: AssemblyProduct("Battlefield 2 Redirector")]
+[assembly: AssemblyProduct("Battlefield2 Statistics Launcher")]
 [assembly: AssemblyCopyright("Copyright © Plexis 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

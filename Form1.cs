@@ -10,19 +10,34 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using System.Reflection;
 
-namespace BF2redirector
+namespace BF2statisticsLauncher
 {
     public partial class Form1 : Form
     {
         private bool isStarted;
         private HostsWritter Writter;
+        private string[] Mods;
+        public static readonly string Root = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
         public Form1()
         {
             this.isStarted = false;
             InitializeComponent();
             Writter = new HostsWritter(this);
+
+            // Make sure we are in the correct directory!
+            if (!File.Exists(Path.Combine(Root, "BF2.exe")))
+            {
+                MessageBox.Show("Program must be executed in the Battlefield 2 install directory!", "Battlefield 2 Lanucher Error");
+                this.Load += new EventHandler(MyForm_CloseOnStart);
+            }
+            else
+            {
+                // Default select mode items
+                GetBF2ModsList();
+            }
         }
 
         private void iButton_Click(object sender, EventArgs e)
@@ -93,6 +108,11 @@ namespace BF2redirector
                         return;
                     }
 
+                    // Lock groupboxes and button
+                    BF2webGroupBox.Enabled = false;
+                    GpcmGroupBox.Enabled = false;
+                    iButton.Enabled = false;
+
                     Output("- Adding gpcm.gamespy.com redirect to hosts file");
                     Output("- Adding gpsp.gamespy.com redirect to hosts file");
 
@@ -102,15 +122,13 @@ namespace BF2redirector
                     IPs.Add("gpsp.gamespy.com");
                 }
 
-                Output("- Writting to hosts file...");
-
                 // Write the lines to the hosts file
                 bool error = false;
                 try
                 {
                     //SetACL.UnlockHostsFile();
                     Writter.AppendLines(Lines);
-                    Output("- Success!");
+                    Output("- Writting to hosts file... Success!");
 
                     // Flush the DNS!
                     FlushDNS();
@@ -121,9 +139,11 @@ namespace BF2redirector
                     // Lock the hosts file
                     Output("- Locking HOSTS file");
                     SetACL.LockHostsFile(this);
+                    Output("- All Done!");
                 }
                 catch
                 {
+                    Output("- Writting to hosts file... Failed!");
                     error = true;
                 }
 
@@ -131,13 +151,15 @@ namespace BF2redirector
                 {
                     // Set form data
                     isStarted = true;
-                    iButton.Text = "Stop Redirect";
-                    BF2webGroupBox.Enabled = false;
-                    GpcmGroupBox.Enabled = false;
+                    iButton.Text = "Remove HOSTS Redirect";
+                    iButton.Enabled = true;
                 }
             }
             else
             {
+                // Lock the button
+                iButton.Enabled = false;
+
                 // Tell the writter to restore the HOSTS file to its
                 // original state
                 Output("- Unlocking HOSTS file");
@@ -152,9 +174,50 @@ namespace BF2redirector
 
                 // Reset form data
                 isStarted = false;
-                iButton.Text = "Begin Redirect";
+                iButton.Text = "Begin HOSTS Redirect";
                 BF2webGroupBox.Enabled = true;
                 GpcmGroupBox.Enabled = true;
+                iButton.Enabled = true;
+
+                Output("- All Done!");
+            }
+        }
+
+        private void LButton_Click(object sender, EventArgs e)
+        {
+            StartBF2();
+        }
+
+        private void StartBF2()
+        {
+            // Get our current mod
+            object i = ModSelectList.SelectedItem;
+            string item = "";
+            try
+            {
+                item = i.ToString();
+            }
+            catch
+            {
+                item = "bf2";
+            }
+
+            // Start new BF2 proccess
+            ProcessStartInfo Info = new ProcessStartInfo();
+            Info.Arguments = String.Format(" +modPath mods/{0} {1}", item.ToLower(), ParamBox.Text.Trim());
+            Info.FileName = Path.Combine(Root, "BF2.exe");
+            Process BF2 = Process.Start(Info);
+        }
+
+        private void GetBF2ModsList()
+        {
+            int i = 0;
+            string path = Path.Combine(Root, "mods");
+            Mods = Directory.GetDirectories(path);
+            foreach (string D in Mods)
+            {
+                ModSelectList.Items.Add(new Item(D.Remove(0, path.Length + 1), i));
+                i++;
             }
         }
 
@@ -176,6 +239,8 @@ namespace BF2redirector
             Info.FileName = Path.Combine(Environment.SystemDirectory, "cmd.exe");
 
             Process gsProcess = Process.Start(Info);
+            gsProcess.StandardOutput.ReadToEnd();
+            gsProcess.Close();
         }
 
         public void DoPings(List<string> IPs)
@@ -191,8 +256,14 @@ namespace BF2redirector
                 Info.FileName = Path.Combine(Environment.SystemDirectory, "cmd.exe");
 
                 Process gsProcess = Process.Start(Info);
-                Thread.Sleep(1000);
+                gsProcess.StandardOutput.ReadToEnd();
+                gsProcess.Close();
             }
+        }
+
+        private void MyForm_CloseOnStart(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

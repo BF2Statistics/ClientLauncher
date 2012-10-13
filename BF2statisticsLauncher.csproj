@@ -8,8 +8,8 @@
     <ProjectGuid>{C93FD131-D4D5-46CC-AC2C-BC4DAAFBA657}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BF2redirector</RootNamespace>
-    <AssemblyName>BF2redirector</AssemblyName>
+    <RootNamespace>BF2statisticsLauncher</RootNamespace>
+    <AssemblyName>BF2statisticsLauncher</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -56,6 +56,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="HostsWritter.cs" />
+    <Compile Include="Item.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SetACL.cs" />
