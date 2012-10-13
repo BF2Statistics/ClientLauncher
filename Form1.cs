@@ -20,6 +20,7 @@ namespace BF2statisticsLauncher
         private HostsWritter Writter;
         private string[] Mods;
         public static readonly string Root = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        private static BackgroundWorker bWorker = new BackgroundWorker();
 
         public Form1()
         {
@@ -133,13 +134,11 @@ namespace BF2statisticsLauncher
                     // Flush the DNS!
                     FlushDNS();
 
-                    // Do pings
-                    DoPings(IPs);
-
-                    // Lock the hosts file
-                    Output("- Locking HOSTS file");
-                    SetACL.LockHostsFile(this);
-                    Output("- All Done!");
+                    // Do pings, And lock hosts file. We do this in
+                    // a background worker so the User can imediatly start
+                    // the BF2 client with the HOSTS redirect finishes
+                    bWorker.DoWork += new DoWorkEventHandler(DoPingsAndFinish);
+                    bWorker.RunWorkerAsync(IPs);
                 }
                 catch
                 {
@@ -181,6 +180,31 @@ namespace BF2statisticsLauncher
 
                 Output("- All Done!");
             }
+        }
+
+        void DoPingsAndFinish(object sender, DoWorkEventArgs e)
+        {
+            List<string> IPs= new List<string>((List<string>) e.Argument);
+
+            foreach (string IP in IPs)
+            {
+                Output("- Pinging " + IP);
+                ProcessStartInfo Info = new ProcessStartInfo();
+                Info.UseShellExecute = false;
+                Info.CreateNoWindow = true;
+                Info.RedirectStandardOutput = true;
+                Info.Arguments = String.Format("/C ping {0}", IP);
+                Info.FileName = Path.Combine(Environment.SystemDirectory, "cmd.exe");
+
+                Process gsProcess = Process.Start(Info);
+                gsProcess.StandardOutput.ReadToEnd();
+                gsProcess.Close();
+            }
+
+            // Lock the hosts file
+            Output("- Locking HOSTS file");
+            SetACL.LockHostsFile(this);
+            Output("- All Done!");
         }
 
         private void LButton_Click(object sender, EventArgs e)
@@ -241,24 +265,6 @@ namespace BF2statisticsLauncher
             Process gsProcess = Process.Start(Info);
             gsProcess.StandardOutput.ReadToEnd();
             gsProcess.Close();
-        }
-
-        public void DoPings(List<string> IPs)
-        {
-            foreach (string IP in IPs)
-            {
-                Output("- Pinging " + IP);
-                ProcessStartInfo Info = new ProcessStartInfo();
-                Info.UseShellExecute = false;
-                Info.CreateNoWindow = true;
-                Info.RedirectStandardOutput = true;
-                Info.Arguments = String.Format("/C ping {0}", IP);
-                Info.FileName = Path.Combine(Environment.SystemDirectory, "cmd.exe");
-
-                Process gsProcess = Process.Start(Info);
-                gsProcess.StandardOutput.ReadToEnd();
-                gsProcess.Close();
-            }
         }
 
         private void MyForm_CloseOnStart(object sender, EventArgs e)
