@@ -4,12 +4,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using System.Reflection;
 
 namespace BF2statisticsLauncher
@@ -26,12 +24,26 @@ namespace BF2statisticsLauncher
         {
             this.isStarted = false;
             InitializeComponent();
-            Writter = new HostsWritter(this);
+
+            try
+            {
+                Writter = new HostsWritter();
+            }
+            catch
+            {
+                MessageBox.Show(
+                    "Unable to open HOSTS file! Please make sure to replace your HOSTS file with " +
+                    "the one provided in the release package, or remove your current permissions from the HOSTS file. " + 
+                    "It may also help to run this program as an administrator.", 
+                    "BF2 Statistics Launcher Error"
+                );
+                this.Load += new EventHandler(MyForm_CloseOnStart);
+            }
 
             // Make sure we are in the correct directory!
             if (!File.Exists(Path.Combine(Root, "BF2.exe")))
             {
-                MessageBox.Show("Program must be executed in the Battlefield 2 install directory!", "BF2 Statistics Lanucher Error");
+                MessageBox.Show("Program must be executed in the Battlefield 2 install directory!", "BF2 Statistics Launcher Error");
                 this.Load += new EventHandler(MyForm_CloseOnStart);
             }
             else
@@ -152,6 +164,19 @@ namespace BF2statisticsLauncher
                     isStarted = true;
                     iButton.Text = "Remove HOSTS Redirect";
                     iButton.Enabled = true;
+                }
+                else
+                {
+                    iButton.Enabled = true;
+                    Bf2webCheckbox.Enabled = true;
+                    GpcmCheckbox.Enabled = true;
+
+                    MessageBox.Show(
+                        "Unable to WRITE to HOSTS file! Please make sure to replace your HOSTS file with " +
+                        "the one provided in the release package, or remove your current permissions from the HOSTS file. " +
+                        "It may also help to run this program as an administrator.",
+                        "BF2 Statistics Launcher Error"
+                    );
                 }
             }
             else

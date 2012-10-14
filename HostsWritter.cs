@@ -10,11 +10,9 @@ namespace BF2statisticsLauncher
         private bool isReverted = true;
         public static string HostsFile { get; protected set; }
         private byte[] OldData;
-        private Form1 instance;
 
-        public HostsWritter(Form1 form)
+        public HostsWritter()
         {
-            this.instance = form;
             HostsFile = Path.Combine(Environment.SystemDirectory, "drivers", "etc", "HOSTS");
             SetACL.UnlockHostsFile();
 
@@ -130,11 +128,8 @@ namespace BF2statisticsLauncher
         /// <param name="message">The message to be written to the log file</param>
         public void Log(string message)
         {
-            // Log the message to the output window as well
-            instance.Output("- [ERROR] " + message);
-
             DateTime datet = DateTime.Now;
-            String logFile = Path.Combine(Form1.Root, "error.log");
+            String logFile = Path.Combine(Form1.Root, "Bf2StatisticsLauncher.error.log");
             if (!File.Exists(logFile))
             {
                 FileStream files = File.Create(logFile);

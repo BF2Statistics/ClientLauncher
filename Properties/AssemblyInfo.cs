@@ -1,12 +1,13 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Resources;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("BF2statisticsLauncher")]
-[assembly: AssemblyDescription("HOSTS modifier for BF2")]
+[assembly: AssemblyTitle("Battlefield2 Statistics Launcher")]
+[assembly: AssemblyDescription("HOSTS file modifier and Launcher for BF2")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Plexis")]
 [assembly: AssemblyProduct("Battlefield2 Statistics Launcher")]
@@ -34,3 +35,4 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: NeutralResourcesLanguageAttribute("en-US")]
