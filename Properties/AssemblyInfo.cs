@@ -6,11 +6,11 @@ using System.Resources;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Battlefield2 Statistics Launcher")]
+[assembly: AssemblyTitle("Battlefield2 Statistics Client Launcher")]
 [assembly: AssemblyDescription("HOSTS file modifier and Launcher for BF2")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Plexis")]
-[assembly: AssemblyProduct("Battlefield2 Statistics Launcher")]
+[assembly: AssemblyProduct("Battlefield2 Statistics Client Launcher")]
 [assembly: AssemblyCopyright("Copyright © Plexis 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
