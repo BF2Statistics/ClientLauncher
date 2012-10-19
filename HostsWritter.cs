@@ -9,7 +9,7 @@ namespace BF2statisticsLauncher
     {
         private bool isReverted = true;
         public static string HostsFile { get; protected set; }
-        private byte[] OldData;
+        public byte[] OldData;
 
         public HostsWritter()
         {
@@ -45,9 +45,6 @@ namespace BF2statisticsLauncher
         /// <param name="lines">An array of [hostname, IP Address]</param>
         public void AppendLines(Dictionary<string, string> lines)
         {
-            // Remove old gamespy data from the hosts file
-            CheckOldData(lines);
-
             try
             {
                 StreamWriter sw = File.AppendText(HostsFile);
@@ -98,28 +95,6 @@ namespace BF2statisticsLauncher
             {
                 Log(e.Message.ToString());
             }
-        }
-
-        /// <summary>
-        /// Checks for, and removes all old gamespy data from the hosts file
-        /// </summary>
-        private void CheckOldData(Dictionary<string, string> lines)
-        {
-            // Convert old data to a string
-            string data = Encoding.ASCII.GetString(OldData);
-            bool changed = false;
-            foreach (KeyValuePair<String, String> line in lines)
-            {
-                string format = String.Format("{0} {1}", line.Value, line.Key);
-                if (data.IndexOf(format) != -1)
-                {
-                    changed = true;
-                    data.Replace(format + Environment.NewLine, "");
-                }
-            }
-
-            if (changed)
-                OldData = Encoding.ASCII.GetBytes(data);
         }
 
         /// <summary>

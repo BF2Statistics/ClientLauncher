@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
@@ -17,7 +18,7 @@ namespace BF2statisticsLauncher
         private bool isStarted;
         private HostsWritter Writter;
         private string[] Mods;
-        public static readonly string Root = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        public static readonly string Root = Application.StartupPath;
         private static BackgroundWorker bWorker = new BackgroundWorker();
 
         public Form1()
@@ -48,8 +49,56 @@ namespace BF2statisticsLauncher
             }
             else
             {
+                // Do hosts file check for existing redirects
+                DoHOSTSCheck();
+
                 // Default select mode items
                 GetBF2ModsList();
+            }
+        }
+
+        private void DoHOSTSCheck()
+        {
+            string Data = Encoding.ASCII.GetString(Writter.OldData);
+            Match match;
+            bool MatchFound = false;
+
+            // BF2web
+            match = Regex.Match(Data, @"(?<address>[A-Z0-9.:]+)([\s|\t]+)bf2web.gamespy.com", RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                MatchFound = true;
+                Bf2webCheckbox.Checked = true;
+                Bf2webAddress.Text = match.Groups["address"].Value;
+                BF2webGroupBox.Enabled = false;
+            }
+
+            // GPCM
+            match = Regex.Match(Data, @"(?<address>[A-Z0-9.:]+)([\s|\t]+)gpcm.gamespy.com", RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                MatchFound = true;
+                GpcmCheckbox.Checked = true;
+                GpcmAddress.Text = match.Groups["address"].Value;
+                GpcmGroupBox.Enabled = false;
+            }
+
+            if (MatchFound)
+            {
+                Output("- Found old redirect data in HOSTS file.");
+                isStarted = true;
+                iButton.Text = "Remove HOSTS Redirect";
+
+                Output("- Locking HOSTS file");
+                SetACL.LockHostsFile(this);
+
+                // Remove redirects for old data
+                Data = Regex.Replace(Data, @"([A-Z0-9.:]+)([\s|\t]+)bf2web.gamespy.com(.*)([\n|\r|\r\n]+)", "", RegexOptions.IgnoreCase);
+                Data = Regex.Replace(Data, @"([A-Z0-9.:]+)([\s|\t]+)gpcm.gamespy.com(.*)([\n|\r|\r\n]+)", "", RegexOptions.IgnoreCase);
+                Data = Regex.Replace(Data, @"([A-Z0-9.:]+)([\s|\t]+)gpsp.gamespy.com(.*)([\n|\r|\r\n]+)", "", RegexOptions.IgnoreCase);
+                Writter.OldData = Encoding.ASCII.GetBytes(Data);
+
+                Output("- All Done!");
             }
         }
 
