@@ -66,10 +66,10 @@
             // 
             // Bf2webAddress
             // 
-            this.Bf2webAddress.Location = new System.Drawing.Point(73, 42);
-            this.Bf2webAddress.MaxLength = 30;
+            this.Bf2webAddress.Location = new System.Drawing.Point(97, 42);
+            this.Bf2webAddress.MaxLength = 100;
             this.Bf2webAddress.Name = "Bf2webAddress";
-            this.Bf2webAddress.Size = new System.Drawing.Size(167, 20);
+            this.Bf2webAddress.Size = new System.Drawing.Size(145, 20);
             this.Bf2webAddress.TabIndex = 2;
             this.Bf2webAddress.Text = "127.0.0.1";
             // 
@@ -90,9 +90,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(10, 43);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(64, 13);
+            this.label1.Size = new System.Drawing.Size(86, 13);
             this.label1.TabIndex = 3;
-            this.label1.Text = "IP Address: ";
+            this.label1.Text = "Hostname or IP: ";
             // 
             // GpcmGroupBox
             // 
@@ -111,9 +111,9 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(10, 43);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(64, 13);
+            this.label2.Size = new System.Drawing.Size(86, 13);
             this.label2.TabIndex = 3;
-            this.label2.Text = "IP Address: ";
+            this.label2.Text = "Hostname or IP: ";
             // 
             // GpcmCheckbox
             // 
@@ -127,10 +127,10 @@
             // 
             // GpcmAddress
             // 
-            this.GpcmAddress.Location = new System.Drawing.Point(73, 42);
-            this.GpcmAddress.MaxLength = 30;
+            this.GpcmAddress.Location = new System.Drawing.Point(97, 42);
+            this.GpcmAddress.MaxLength = 100;
             this.GpcmAddress.Name = "GpcmAddress";
-            this.GpcmAddress.Size = new System.Drawing.Size(167, 20);
+            this.GpcmAddress.Size = new System.Drawing.Size(145, 20);
             this.GpcmAddress.TabIndex = 2;
             this.GpcmAddress.Text = "127.0.0.1";
             // 
@@ -234,7 +234,7 @@
             this.LButton.UseVisualStyleBackColor = true;
             this.LButton.Click += new System.EventHandler(this.LButton_Click);
             // 
-            // Form1
+            // Launcher
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -248,7 +248,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "Form1";
+            this.Name = "Launcher";
             this.Text = "BF2 Statistics Client Launcher";
             this.BF2webGroupBox.ResumeLayout(false);
             this.BF2webGroupBox.PerformLayout();

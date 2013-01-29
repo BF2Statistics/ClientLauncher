@@ -48,6 +48,9 @@ namespace BF2statisticsLauncher
             try
             {
                 StreamWriter sw = File.AppendText(HostsFile);
+
+                // Make sure we have a new line first!
+                sw.WriteLine();
                 foreach (KeyValuePair<String, String> line in lines)
                 {
                     sw.WriteLine(String.Format("{0} {1}", line.Value, line.Key));
@@ -68,7 +71,7 @@ namespace BF2statisticsLauncher
         {
             try
             {
-                OldData = File.ReadAllBytes(HostsFile);
+                OldData = Encoding.ASCII.GetBytes(File.ReadAllText(HostsFile).TrimEnd('\r', '\n'));
             }
             catch (Exception e)
             {

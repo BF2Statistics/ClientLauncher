@@ -8,6 +8,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Net.NetworkInformation;
 using System.IO;
 using System.Reflection;
 
@@ -121,7 +123,7 @@ namespace BF2statisticsLauncher
                 Data = Regex.Replace(Data, @"([A-Z0-9.:]+)([\s|\t]+)bf2web.gamespy.com(.*)([\n|\r|\r\n]+)", "", RegexOptions.IgnoreCase);
                 Data = Regex.Replace(Data, @"([A-Z0-9.:]+)([\s|\t]+)gpcm.gamespy.com(.*)([\n|\r|\r\n]+)", "", RegexOptions.IgnoreCase);
                 Data = Regex.Replace(Data, @"([A-Z0-9.:]+)([\s|\t]+)gpsp.gamespy.com(.*)([\n|\r|\r\n]+)", "", RegexOptions.IgnoreCase);
-                Writter.OldData = Encoding.ASCII.GetBytes(Data);
+                Writter.OldData = Encoding.ASCII.GetBytes(Data.Trim());
 
                 Output("- All Done!");
             }
@@ -162,17 +164,26 @@ namespace BF2statisticsLauncher
 
                     if (text.Length < 8)
                     {
-                        MessageBox.Show("You must enter an IP address in the Address box!", "BF2 Statistics Launcher Error");
+                        MessageBox.Show(
+                            "You must enter an IP address or Hostname in the Address box!", 
+                            "BF2 Statistics Launcher Error"
+                        );
+                        Bf2webAddress.Focus();
                         return;
                     }
 
-                    // Make sure the IP address is valid!
+                    // Check if this is an IP address or hostname
                     IPAddress BF2Web;
-                    bool BF2WebValid = IPAddress.TryParse(text, out BF2Web);
-
-                    if (!BF2WebValid)
+                    try
                     {
-                        MessageBox.Show("Stats redirect address is invalid.", "BF2 Statistics Launcher Error");
+                        BF2Web = GetIpAddress(text);
+                    }
+                    catch
+                    {
+                        MessageBox.Show(
+                            "Stats server redirect address is invalid, or doesnt exist. Please enter a valid, and existing IPv4/6 or Hostname.", 
+                            "BF2 Statistics Launcher Error"
+                        );
                         return;
                     }
 
@@ -190,17 +201,23 @@ namespace BF2statisticsLauncher
 
                     if (text2.Length < 8)
                     {
-                        MessageBox.Show("You must enter an IP address in the Address box!", "BF2 Statistics Launcher Error");
+                        MessageBox.Show("You must enter an IP address or Hostname in the Address box!", "BF2 Statistics Launcher Error");
+                        GpcmAddress.Focus();
                         return;
                     }
 
                     // Make sure the IP address is valid!
                     IPAddress GpcmA;
-                    bool GpcmValid = IPAddress.TryParse(text2, out GpcmA);
-
-                    if (!GpcmValid)
+                    try
                     {
-                        MessageBox.Show("Login Server redirect address is invalid.", "BF2 Statistics Launcher Error");
+                        GpcmA = GetIpAddress(text2);
+                    }
+                    catch
+                    {
+                        MessageBox.Show(
+                            "Login Server redirect address is invalid, or doesnt exist. Please enter a valid, and existing IPv4/6 or Hostname.",
+                            "BF2 Statistics Launcher Error"
+                        );
                         return;
                     }
 
@@ -293,6 +310,34 @@ namespace BF2statisticsLauncher
             }
         }
 
+        private IPAddress GetIpAddress(string text)
+        {
+            // Make sure the IP address is valid!
+            IPAddress Address;
+            bool isValid = IPAddress.TryParse(text, out Address);
+
+            if (!isValid)
+            {
+                // Try to get dns value
+                IPAddress[] Addresses;
+                try
+                {
+                    Addresses = Dns.GetHostAddresses(text);
+                }
+                catch
+                {
+                    throw new Exception("Invalid Hostname or IP Address");
+                }
+
+                if (Addresses.Length == 0)
+                    throw new Exception("Invalid Hostname or IP Address");
+
+                return Addresses[0];
+            }
+
+            return Address;
+        }
+
         /// <summary>
         /// Preforms the pings required to fill the dns cache, and locks the HOSTS file.
         /// Mehod is to be used with the BackGroundWorker object.
@@ -302,20 +347,35 @@ namespace BF2statisticsLauncher
         void DoPingsAndFinish(object sender, DoWorkEventArgs e)
         {
             List<string> IPs= new List<string>((List<string>) e.Argument);
+            bool IsXpOrOlder = Environment.OSVersion.Version.Major < 6;
+            bool isVista = (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 0);
 
-            foreach (string IP in IPs)
+            // Xp and older donot support the Ping class
+            if (IsXpOrOlder || isVista)
             {
-                Output("- Pinging " + IP);
-                ProcessStartInfo Info = new ProcessStartInfo();
-                Info.UseShellExecute = false;
-                Info.CreateNoWindow = true;
-                Info.RedirectStandardOutput = true;
-                Info.Arguments = String.Format("/C ping {0}", IP);
-                Info.FileName = Path.Combine(Environment.SystemDirectory, "cmd.exe");
+                foreach (string IP in IPs)
+                {
+                    Output("- Pinging " + IP);
+                    ProcessStartInfo Info = new ProcessStartInfo();
+                    Info.UseShellExecute = false;
+                    Info.CreateNoWindow = true;
+                    Info.RedirectStandardOutput = true;
+                    Info.Arguments = String.Format(" {0}", IP);
+                    Info.FileName = Path.Combine(Environment.SystemDirectory, "ping.exe");
 
-                Process gsProcess = Process.Start(Info);
-                gsProcess.StandardOutput.ReadToEnd();
-                gsProcess.Close();
+                    Process gsProcess = Process.Start(Info);
+                    gsProcess.StandardOutput.ReadToEnd();
+                    gsProcess.Close();
+                }
+            }
+            else
+            {
+                foreach (string IP in IPs)
+                {
+                    Output("- Pinging " + IP);
+                    Ping p = new Ping();
+                    PingReply reply = p.Send(IP);
+                }
             }
 
             // Lock the hosts file
@@ -394,17 +454,11 @@ namespace BF2statisticsLauncher
         public void FlushDNS()
         {
             Output("- Flushing DNS Cache");
-            ProcessStartInfo Info = new ProcessStartInfo();
-            Info.UseShellExecute = false;
-            Info.CreateNoWindow = true;
-            Info.RedirectStandardOutput = true;
-            Info.Arguments = "/C ipconfig /flushdns";
-            Info.FileName = Path.Combine(Environment.SystemDirectory, "cmd.exe");
-
-            Process gsProcess = Process.Start(Info);
-            gsProcess.StandardOutput.ReadToEnd();
-            gsProcess.Close();
+            DnsFlushResolverCache();
         }
+
+        [DllImport("dnsapi.dll", EntryPoint = "DnsFlushResolverCache")]
+        private static extern UInt32 DnsFlushResolverCache();
 
         /// <summary>
         /// Closes the GUI on startup error
