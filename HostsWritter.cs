@@ -104,7 +104,7 @@ namespace BF2statisticsLauncher
         public void Log(string message)
         {
             DateTime datet = DateTime.Now;
-            String logFile = Path.Combine(Form1.Root, "Bf2StatisticsLauncher.error.log");
+            String logFile = Path.Combine(Launcher.Root, "Bf2StatisticsLauncher.error.log");
             if (!File.Exists(logFile))
             {
                 FileStream files = File.Create(logFile);

@@ -13,25 +13,45 @@ using System.Reflection;
 
 namespace BF2statisticsLauncher
 {
-    public partial class Form1 : Form
+    /// <summary>
+    /// Main application
+    /// </summary>
+    public partial class Launcher : Form
     {
+        /// <summary>
+        /// Is the hosts redirect active?
+        /// </summary>
         private bool isStarted;
-        private HostsWritter Writter;
-        private string[] Mods;
-        public static readonly string Root = Application.StartupPath;
-        private static BackgroundWorker bWorker = new BackgroundWorker();
 
-        public Form1()
+        /// <summary>
+        /// The HOSTS file writter object
+        /// </summary>
+        private HostsWritter Writter;
+
+        /// <summary>
+        /// Array of mods found in the "bf2/mods" folder
+        /// </summary>
+        private string[] Mods;
+
+        /// <summary>
+        /// Our BF2 Root Path
+        /// </summary>
+        public static readonly string Root = Application.StartupPath;
+
+        /// <summary>
+        /// Background worker used for pinging the redirects, preventing the GUI from locking up.
+        /// </summary>
+        private static BackgroundWorker bWorker;
+
+        public Launcher()
         {
             this.isStarted = false;
             InitializeComponent();
 
-            try
-            {
+            try {
                 Writter = new HostsWritter();
             }
-            catch
-            {
+            catch {
                 MessageBox.Show(
                     "Unable to open HOSTS file! Please make sure to replace your HOSTS file with " +
                     "the one provided in the release package, or remove your current permissions from the HOSTS file. " + 
@@ -57,6 +77,10 @@ namespace BF2statisticsLauncher
             }
         }
 
+        /// <summary>
+        /// Checks the HOSTS file on startup, detecting existing redirects to the bf2web.gamespy
+        /// or gpcm/gpsp.gamespy urls
+        /// </summary>
         private void DoHOSTSCheck()
         {
             string Data = Encoding.ASCII.GetString(Writter.OldData);
@@ -83,6 +107,7 @@ namespace BF2statisticsLauncher
                 GpcmGroupBox.Enabled = false;
             }
 
+            // Did we find any matches?
             if (MatchFound)
             {
                 Output("- Found old redirect data in HOSTS file.");
@@ -102,15 +127,24 @@ namespace BF2statisticsLauncher
             }
         }
 
+        /// <summary>
+        /// This is the main HOSTS file button event handler.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void iButton_Click(object sender, EventArgs e)
         {
+            // If we do not have a redirect in the hosts file...
             if (!isStarted)
             {
+                // Lines to add to the HOSTS file. [hostname, ipAddress]
                 Dictionary<string, string> Lines = new Dictionary<string, string>();
+
+                // List of IPs to being added to the hosts file. This will be used to pinging in the cms prompt.
                 List<string> IPs = new List<string>();
 
                 // Clear the output window
-                LogBox.Text = "";
+                LogBox.Clear();
 
                 // Make sure we are going to redirect something...
                 if (!Bf2webCheckbox.Checked && !GpcmCheckbox.Checked)
@@ -170,11 +204,6 @@ namespace BF2statisticsLauncher
                         return;
                     }
 
-                    // Lock groupboxes and button
-                    BF2webGroupBox.Enabled = false;
-                    GpcmGroupBox.Enabled = false;
-                    iButton.Enabled = false;
-
                     Output("- Adding gpcm.gamespy.com redirect to hosts file");
                     Output("- Adding gpsp.gamespy.com redirect to hosts file");
 
@@ -183,6 +212,14 @@ namespace BF2statisticsLauncher
                     IPs.Add("gpcm.gamespy.com");
                     IPs.Add("gpsp.gamespy.com");
                 }
+
+                // Lock button and groupboxes
+                iButton.Enabled = false;
+                GpcmGroupBox.Enabled = false;
+                BF2webGroupBox.Enabled = false;
+
+                // Create new instance of the background worker
+                bWorker = new BackgroundWorker();
 
                 // Write the lines to the hosts file
                 bool error = false;
@@ -256,6 +293,12 @@ namespace BF2statisticsLauncher
             }
         }
 
+        /// <summary>
+        /// Preforms the pings required to fill the dns cache, and locks the HOSTS file.
+        /// Mehod is to be used with the BackGroundWorker object.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void DoPingsAndFinish(object sender, DoWorkEventArgs e)
         {
             List<string> IPs= new List<string>((List<string>) e.Argument);
@@ -281,51 +324,73 @@ namespace BF2statisticsLauncher
             Output("- All Done!");
         }
 
+        /// <summary>
+        /// BattleField 2 launcher button event handler. Launches the BF2.exe
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void LButton_Click(object sender, EventArgs e)
         {
-            StartBF2();
-        }
-
-        private void StartBF2()
-        {
             // Get our current mod
-            object i = ModSelectList.SelectedItem;
-            string item = "";
-            try
-            {
-                item = i.ToString();
-            }
-            catch
-            {
-                item = "bf2";
-            }
+            string mod = ModSelectList.SelectedItem.ToString();
 
             // Start new BF2 proccess
             ProcessStartInfo Info = new ProcessStartInfo();
-            Info.Arguments = String.Format(" +modPath mods/{0} {1}", item.ToLower(), ParamBox.Text.Trim());
+            Info.Arguments = String.Format(" +modPath mods/{0} {1}", mod.ToLower(), ParamBox.Text.Trim());
             Info.FileName = Path.Combine(Root, "BF2.exe");
             Process BF2 = Process.Start(Info);
         }
 
+        /// <summary>
+        /// Fetches the list of installed BF2 mods.
+        /// </summary>
         private void GetBF2ModsList()
         {
-            int i = 0;
+            // Get our list of mods
             string path = Path.Combine(Root, "mods");
+            int pathLength = path.Length;
             Mods = Directory.GetDirectories(path);
+
+            // Add each mod to the select list
+            int i = 0;
             foreach (string D in Mods)
             {
-                ModSelectList.Items.Add(new Item(D.Remove(0, path.Length + 1), i));
+                // Add the mod to the list of items
+                string mod = D.Remove(0, pathLength + 1);
+                ModSelectList.Items.Add(new Item(mod, i));
+
+                // Set the selected index if the mod is bf2
+                if (mod == "bf2")
+                    ModSelectList.SelectedIndex = i;
                 i++;
             }
+
+            // Do we have any mods?
+            if (i == 0)
+            {
+                MessageBox.Show("No mods detected in the bf2 mods folder. Unable to continue.", "BF2 Statistics Launcher Error");
+                this.Load += new EventHandler(MyForm_CloseOnStart);
+                return;
+            }
+
+            // Make sure we have an item selected
+            if (ModSelectList.SelectedIndex == -1)
+                ModSelectList.SelectedIndex = 0;
         }
 
+        /// <summary>
+        /// Adds a new line to the "status" window on the GUI
+        /// </summary>
+        /// <param name="message"></param>
         public void Output(string message)
         {
             LogBox.Text += message + Environment.NewLine;
-            LogBox.ScrollToCaret();
             LogBox.Refresh();
         }
 
+        /// <summary>
+        /// Flushes the Windows DNS cache
+        /// </summary>
         public void FlushDNS()
         {
             Output("- Flushing DNS Cache");
@@ -341,6 +406,11 @@ namespace BF2statisticsLauncher
             gsProcess.Close();
         }
 
+        /// <summary>
+        /// Closes the GUI on startup error
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MyForm_CloseOnStart(object sender, EventArgs e)
         {
             this.Close();
