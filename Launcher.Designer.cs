@@ -149,6 +149,7 @@
             this.LogBox.BackColor = System.Drawing.SystemColors.Control;
             this.LogBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.LogBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.LogBox.Enabled = false;
             this.LogBox.Location = new System.Drawing.Point(5, 15);
             this.LogBox.Multiline = true;
             this.LogBox.Name = "LogBox";
@@ -249,7 +250,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Launcher";
-            this.Text = "BF2 Statistics Client Launcher";
+            this.Text = "BF2 Statistics Client Launcher v1.2";
             this.BF2webGroupBox.ResumeLayout(false);
             this.BF2webGroupBox.PerformLayout();
             this.GpcmGroupBox.ResumeLayout(false);

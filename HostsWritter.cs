@@ -2,14 +2,15 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace BF2statisticsLauncher
 {
     class HostsWritter
     {
-        private bool isReverted = true;
         public static string HostsFile { get; protected set; }
-        public byte[] OldData;
+        public List<string> OrigContents;
+        public Dictionary<string, string> Lines;
 
         public HostsWritter()
         {
@@ -24,7 +25,7 @@ namespace BF2statisticsLauncher
             }
             catch (IOException e)
             {
-                Log(e.Message.ToString());
+                Log(e.Message);
                 throw e;
             }
 
@@ -32,35 +33,39 @@ namespace BF2statisticsLauncher
             Backup();
         }
 
-        ~HostsWritter()
-        {
-            if(!isReverted)
-                Revert();
-        }
-
 
         /// <summary>
         /// Adds lines to the hosts file
         /// </summary>
         /// <param name="lines">An array of [hostname, IP Address]</param>
-        public void AppendLines(Dictionary<string, string> lines)
+        public void AppendLines(Dictionary<string, string> add)
         {
             try
             {
-                StreamWriter sw = File.AppendText(HostsFile);
-
-                // Make sure we have a new line first!
-                sw.WriteLine();
-                foreach (KeyValuePair<String, String> line in lines)
+                // First, add the lines
+                foreach (KeyValuePair<String, String> line in add)
                 {
-                    sw.WriteLine(String.Format("{0} {1}", line.Value, line.Key));
+                    if (Lines.ContainsKey(line.Key))
+                    {
+                        Lines[line.Key] = line.Value;
+                        continue;
+                    }
+
+                    Lines.Add(line.Key, line.Value);
                 }
-                sw.Flush();
-                sw.Close();
+
+                // Convert the dictionary of lines to a list of lines
+                List<string> lns = new List<string>();
+                foreach (KeyValuePair<String, String> line in Lines)
+                {
+                    lns.Add( String.Format("{0} {1}", line.Value, line.Key) );
+                }
+
+                File.WriteAllLines(HostsFile, lns);
             }
             catch (Exception e)
             {
-                Log(e.Message.ToString());
+                Log("Error writing to hosts file! Reason: " + e.Message);
             }
         }
 
@@ -71,32 +76,53 @@ namespace BF2statisticsLauncher
         {
             try
             {
-                OldData = Encoding.ASCII.GetBytes(File.ReadAllText(HostsFile).TrimEnd('\r', '\n'));
+                OrigContents = new List<string>(File.ReadAllLines(HostsFile));
+                Lines = new Dictionary<string, string>();
+                foreach (string line in OrigContents)
+                {
+                    // Dont add empty lines
+                    if (String.IsNullOrWhiteSpace(line))
+                        continue;
+
+                    // Add line if we have a valid address and hostname
+                    Match M = Regex.Match(line.Trim(), @"^([\s|\t])?(?<address>[a-z0-9\.:]+)[\s|\t]+(?<hostname>[a-z0-9\.\-_\s]+)$", RegexOptions.IgnoreCase);
+                    if (M.Success)
+                    {
+                        Lines.Add(M.Groups["hostname"].Value.ToLower().Trim(), M.Groups["address"].Value.Trim());
+                    }
+                }
+
+                // Remove old dirty redirects from the Backup
+                for (int i = 0; i < OrigContents.Count; i++)
+                {
+                    if (OrigContents[i].Contains("bf2web.gamespy.com"))
+                        OrigContents.RemoveAt(i);
+                    else if (OrigContents[i].Contains("gpcm.gamespy.com"))
+                        OrigContents.RemoveAt(i);
+                    else if (OrigContents[i].Contains("gpsp.gamespy.com"))
+                        OrigContents.RemoveAt(i);
+                }
             }
             catch (Exception e)
             {
-                Log(e.Message.ToString());
+                Log("Error backing up hosts file! Reason: " + e.Message);
+                throw e;
             }
         }
 
         /// <summary>
-        /// Restores the HOSTS file original contents
+        /// Restores the HOSTS file original contents, also removing the redirects
         /// </summary>
         public void Revert()
         {
             try
             {
-                FileStream stream = File.Open(HostsFile, FileMode.Open);
-                stream.SetLength(0);
-                stream.Write(OldData, 0, OldData.Length);
-                stream.Flush();
-                stream.Close();
-
-                isReverted = true;
+                File.WriteAllLines(HostsFile, OrigContents);
             }
             catch (Exception e)
             {
-                Log(e.Message.ToString());
+                Log("Error writing to hosts file! Reason: " + e.Message);
+                throw e;
             }
         }
 
@@ -122,7 +148,7 @@ namespace BF2statisticsLauncher
             }
             catch (Exception e)
             {
-                Log(e.Message.ToString());
+                Log(e.Message);
             }
         }
 
