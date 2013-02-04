@@ -23,12 +23,12 @@ namespace BF2statisticsLauncher
         /// <summary>
         /// Is the hosts redirect active?
         /// </summary>
-        private bool isStarted;
+        private bool isStarted = false;
 
         /// <summary>
-        /// The HOSTS file writter object
+        /// The HOSTS file object
         /// </summary>
-        private HostsWritter Writter;
+        private HostsFile HostFile;
 
         /// <summary>
         /// Array of mods found in the "bf2/mods" folder
@@ -47,29 +47,30 @@ namespace BF2statisticsLauncher
 
         public Launcher()
         {
-            this.isStarted = false;
             InitializeComponent();
-
-            try {
-                Writter = new HostsWritter();
-            }
-            catch {
-                MessageBox.Show(
-                    "Unable to open HOSTS file! Please make sure to replace your HOSTS file with " +
-                    "the one provided in the release package, or remove your current permissions from the HOSTS file. " + 
-                    "It may also help to run this program as an administrator.", 
-                    "BF2 Statistics Launcher Error"
-                );
-                this.Load += new EventHandler(MyForm_CloseOnStart);
-            }
+            bool error = false;
 
             // Make sure we are in the correct directory!
             if (!File.Exists(Path.Combine(Root, "BF2.exe")))
             {
+                error = true;
                 MessageBox.Show("Program must be executed in the Battlefield 2 install directory!", "BF2 Statistics Launcher Error");
                 this.Load += new EventHandler(MyForm_CloseOnStart);
             }
-            else
+
+            // Try to access the hosts file
+            try {
+                HostFile = new HostsFile();
+            }
+            catch(Exception e)
+            {
+                error = true;
+                MessageBox.Show(e.Message, "BF2 Statistics Launcher Error");
+                this.Load += new EventHandler(MyForm_CloseOnStart);
+            }
+
+            // Only do hosts check and such if we have no errors
+            if (!error)
             {
                 // Do hosts file check for existing redirects
                 DoHOSTSCheck();
@@ -87,32 +88,32 @@ namespace BF2statisticsLauncher
         {
             bool MatchFound = false;
 
-            if (Writter.Lines.ContainsKey("gpcm.gamespy.com"))
+            if (HostFile.Lines.ContainsKey("gpcm.gamespy.com"))
             {
                 MatchFound = true;
                 Bf2webCheckbox.Checked = true;
-                Bf2webAddress.Text = Writter.Lines["gpcm.gamespy.com"];
+                Bf2webAddress.Text = HostFile.Lines["gpcm.gamespy.com"];
                 BF2webGroupBox.Enabled = false;
             }
 
-            if (Writter.Lines.ContainsKey("bf2web.gamespy.com"))
+            if (HostFile.Lines.ContainsKey("bf2web.gamespy.com"))
             {
                 MatchFound = true;
                 Bf2webCheckbox.Checked = true;
-                Bf2webAddress.Text = Writter.Lines["bf2web.gamespy.com"];
+                Bf2webAddress.Text = HostFile.Lines["bf2web.gamespy.com"];
                 BF2webGroupBox.Enabled = false;
             }
 
             // Did we find any matches?
             if (MatchFound)
             {
-                Output("- Found old redirect data in HOSTS file.");
+                UdpateStatus("- Found old redirect data in HOSTS file.");
                 isStarted = true;
                 iButton.Text = "Remove HOSTS Redirect";
 
-                Output("- Locking HOSTS file");
-                SetACL.LockHostsFile(this);
-                Output("- All Done!");
+                UdpateStatus("- Locking HOSTS file");
+                HostFile.Lock();
+                UdpateStatus("- All Done!");
             }
         }
 
@@ -147,8 +148,6 @@ namespace BF2statisticsLauncher
                 {
                     // Make sure we have a valid IP address in the address box!
                     string text = Bf2webAddress.Text.Trim();
-                    if (text == "localhost") text = "127.0.0.1";
-
                     if (text.Length < 8)
                     {
                         MessageBox.Show(
@@ -159,6 +158,10 @@ namespace BF2statisticsLauncher
                         Bf2webAddress.Focus();
                         return;
                     }
+
+                    // Convert Localhost to the Loopback Address
+                    if (text.ToLower() == "localhost") 
+                        text = IPAddress.Loopback.ToString();
 
                     // Check if this is an IP address or hostname
                     IPAddress BF2Web;
@@ -178,7 +181,7 @@ namespace BF2statisticsLauncher
                     }
 
                     Lines.Add("bf2web.gamespy.com", BF2Web.ToString());
-                    Output("- Adding bf2web.gamespy.com redirect to hosts file");   
+                    UdpateStatus("- Adding bf2web.gamespy.com redirect to hosts file");   
                 }
 
                 // First, lets determine what the user wants to redirect
@@ -186,8 +189,6 @@ namespace BF2statisticsLauncher
                 {
                     // Make sure we have a valid IP address in the address box!
                     string text2 = GpcmAddress.Text.Trim(); 
-                    if (text2 == "localhost") text2 = "127.0.0.1";
-
                     if (text2.Length < 8)
                     {
                         MessageBox.Show("You must enter an IP address or Hostname in the Address box!", "BF2 Statistics Launcher Error");
@@ -195,6 +196,10 @@ namespace BF2statisticsLauncher
                         GpcmAddress.Focus();
                         return;
                     }
+
+                    // Convert Localhost to the Loopback Address
+                    if (text2.ToLower() == "localhost") 
+                        text2 = IPAddress.Loopback.ToString();
 
                     // Make sure the IP address is valid!
                     IPAddress GpcmA;
@@ -212,8 +217,8 @@ namespace BF2statisticsLauncher
                         return;
                     }
 
-                    Output("- Adding gpcm.gamespy.com redirect to hosts file");
-                    Output("- Adding gpsp.gamespy.com redirect to hosts file");
+                    UdpateStatus("- Adding gpcm.gamespy.com redirect to hosts file");
+                    UdpateStatus("- Adding gpsp.gamespy.com redirect to hosts file");
 
                     Lines.Add("gpcm.gamespy.com", GpcmA.ToString());
                     Lines.Add("gpsp.gamespy.com", GpcmA.ToString());
@@ -223,13 +228,13 @@ namespace BF2statisticsLauncher
                 bWorker = new BackgroundWorker();
 
                 // Write the lines to the hosts file
-                Output("- Writting to hosts file... ", false);
+                UpdateStatus("- Writting to hosts file... ", false);
                 bool error = false;
                 try
                 {
-                    //SetACL.UnlockHostsFile();
-                    Writter.AppendLines(Lines);
-                    Output("Success!");
+                    // Add lines to the hosts file
+                    HostFile.AppendLines(Lines);
+                    UdpateStatus("Success!");
 
                     // Flush the DNS!
                     FlushDNS();
@@ -242,7 +247,7 @@ namespace BF2statisticsLauncher
                 }
                 catch
                 {
-                    Output("Failed!");
+                    UdpateStatus("Failed!");
                     error = true;
                 }
 
@@ -271,19 +276,19 @@ namespace BF2statisticsLauncher
 
                 // Tell the writter to restore the HOSTS file to its
                 // original state
-                Output("- Unlocking HOSTS file");
-                SetACL.UnlockHostsFile();
+                UdpateStatus("- Unlocking HOSTS file");
+                HostFile.UnLock();
 
                 // Restore the original hosts file contents
-                Output("- Restoring HOSTS file... ", false);
+                UpdateStatus("- Restoring HOSTS file... ", false);
                 try
                 {
-                    Writter.Revert();
-                    Output("Success!");
+                    HostFile.Revert();
+                    UdpateStatus("Success!");
                 }
                 catch
                 {
-                    Output("Failed!");
+                    UdpateStatus("Failed!");
                     MessageBox.Show(
                         "Unable to RESTORE to HOSTS file! Unfortunatly this error can only be fixed by manually removing the HOSTS file,"
                         + " and replacing it with a new one :( . If possible, you may also try changing the permissions yourself.",
@@ -293,11 +298,11 @@ namespace BF2statisticsLauncher
 
                 // Remove lines
                 if (Bf2webCheckbox.Checked)
-                    Writter.Lines.Remove("bf2web.gamespy.com");
+                    HostFile.Lines.Remove("bf2web.gamespy.com");
                 if (GpcmCheckbox.Checked)
                 {
-                    Writter.Lines.Remove("gpcm.gamespy.com");
-                    Writter.Lines.Remove("gpsp.gamespy.com");
+                    HostFile.Lines.Remove("gpcm.gamespy.com");
+                    HostFile.Lines.Remove("gpsp.gamespy.com");
                 }
 
                 // Flush the DNS!
@@ -308,7 +313,7 @@ namespace BF2statisticsLauncher
                 iButton.Text = "Begin HOSTS Redirect";
                 UnlockGroups();
 
-                Output("- All Done!");
+                UdpateStatus("- All Done!");
             }
         }
 
@@ -332,6 +337,12 @@ namespace BF2statisticsLauncher
             BF2webGroupBox.Enabled = false;
         }
 
+        /// <summary>
+        /// Takes a domain name, or IP address, and returns the Correct IP address.
+        /// If multiple IP addresses are found, the first one is returned
+        /// </summary>
+        /// <param name="text">Domain name or IP Address</param>
+        /// <returns></returns>
         private IPAddress GetIpAddress(string text)
         {
             // Make sure the IP address is valid!
@@ -344,22 +355,22 @@ namespace BF2statisticsLauncher
                 IPAddress[] Addresses;
                 try
                 {
-                    Output("- Resolving Hostname: " + text);
+                    UdpateStatus("- Resolving Hostname: " + text);
                     Addresses = Dns.GetHostAddresses(text);
                 }
                 catch
                 {
-                    Output("- Failed to Resolve Hostname!");
+                    UdpateStatus("- Failed to Resolve Hostname!");
                     throw new Exception("Invalid Hostname or IP Address");
                 }
 
                 if (Addresses.Length == 0)
                 {
-                    Output("- Failed to Resolve Hostname!");
+                    UdpateStatus("- Failed to Resolve Hostname!");
                     throw new Exception("Invalid Hostname or IP Address");
                 }
 
-                Output("- Found IP: " + Addresses[0]);
+                UdpateStatus("- Found IP: " + Addresses[0]);
                 return Addresses[0];
             }
 
@@ -377,18 +388,18 @@ namespace BF2statisticsLauncher
         /// <param name="e"></param>
         void RebuildDNSCache(object sender, DoWorkEventArgs e)
         {
-            Output("- Rebuilding DNS Cache... ", false);
-            foreach (KeyValuePair<String, String> IP in Writter.Lines)
+            UpdateStatus("- Rebuilding DNS Cache... ", false);
+            foreach (KeyValuePair<String, String> IP in HostFile.Lines)
             {
                 Ping p = new Ping();
                 PingReply reply = p.Send(IP.Key);
             }
-            Output("Done");
+            UdpateStatus("Done");
 
             // Lock the hosts file
-            Output("- Locking HOSTS file");
-            SetACL.LockHostsFile(this);
-            Output("- All Done!");
+            UdpateStatus("- Locking HOSTS file");
+            HostFile.Lock();
+            UdpateStatus("- All Done!");
         }
 
         /// <summary>
@@ -449,9 +460,9 @@ namespace BF2statisticsLauncher
         /// Adds a new line to the "status" window on the GUI
         /// </summary>
         /// <param name="message">The message to print</param>
-        public void Output(string message)
+        public void UdpateStatus(string message)
         {
-            Output(message, true);
+            UpdateStatus(message, true);
         }
 
         /// <summary>
@@ -459,7 +470,7 @@ namespace BF2statisticsLauncher
         /// </summary>
         /// <param name="message">The message to print</param>
         /// <param name="newLine">Add a new line for the next message?</param>
-        public void Output(string message, bool newLine)
+        public void UpdateStatus(string message, bool newLine)
         {
             if (newLine)
                 message = message + Environment.NewLine;
@@ -473,7 +484,7 @@ namespace BF2statisticsLauncher
         /// <param name="message">The message to dispay to the client</param>
         public static void Show(string message) 
         {
-            MessageBox.Show(message);
+            MessageBox.Show(message, "BF2 Statistics Launcher Error");
         }
 
         /// <summary>
@@ -481,7 +492,7 @@ namespace BF2statisticsLauncher
         /// </summary>
         public void FlushDNS()
         {
-            Output("- Flushing DNS Cache");
+            UdpateStatus("- Flushing DNS Cache");
             DnsFlushResolverCache();
         }
 

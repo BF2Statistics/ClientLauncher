@@ -71,7 +71,7 @@
             this.Bf2webAddress.Name = "Bf2webAddress";
             this.Bf2webAddress.Size = new System.Drawing.Size(145, 20);
             this.Bf2webAddress.TabIndex = 2;
-            this.Bf2webAddress.Text = "127.0.0.1";
+            this.Bf2webAddress.Text = "localhost";
             // 
             // BF2webGroupBox
             // 
@@ -132,7 +132,7 @@
             this.GpcmAddress.Name = "GpcmAddress";
             this.GpcmAddress.Size = new System.Drawing.Size(145, 20);
             this.GpcmAddress.TabIndex = 2;
-            this.GpcmAddress.Text = "127.0.0.1";
+            this.GpcmAddress.Text = "localhost";
             // 
             // iButton
             // 
@@ -250,7 +250,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Launcher";
-            this.Text = "BF2 Statistics Client Launcher v1.2";
+            this.Text = "BF2 Statistics Client Launcher v1.3";
             this.BF2webGroupBox.ResumeLayout(false);
             this.BF2webGroupBox.PerformLayout();
             this.GpcmGroupBox.ResumeLayout(false);
