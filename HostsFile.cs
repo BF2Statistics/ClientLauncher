@@ -142,7 +142,10 @@ namespace BF2statisticsLauncher
 
             // Make sure we have a localhost loopback!
             if (!Lines.ContainsKey("localhost"))
+            {
+                OrigContents.Add("127.0.0.1\tlocalhost");
                 Lines.Add("localhost", System.Net.IPAddress.Loopback.ToString());
+            }
         }
 
         /// <summary>
