@@ -250,7 +250,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Launcher";
-            this.Text = "BF2 Statistics Client Launcher v1.3";
+            this.Text = "BF2 Statistics Client Launcher v1.3a";
             this.BF2webGroupBox.ResumeLayout(false);
             this.BF2webGroupBox.PerformLayout();
             this.GpcmGroupBox.ResumeLayout(false);

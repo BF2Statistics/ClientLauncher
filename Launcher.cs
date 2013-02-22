@@ -91,9 +91,8 @@ namespace BF2statisticsLauncher
             if (HostFile.Lines.ContainsKey("gpcm.gamespy.com"))
             {
                 MatchFound = true;
-                Bf2webCheckbox.Checked = true;
-                Bf2webAddress.Text = HostFile.Lines["gpcm.gamespy.com"];
-                BF2webGroupBox.Enabled = false;
+                GpcmCheckbox.Checked = true;
+                GpcmAddress.Text = HostFile.Lines["gpcm.gamespy.com"];
             }
 
             if (HostFile.Lines.ContainsKey("bf2web.gamespy.com"))
@@ -101,7 +100,6 @@ namespace BF2statisticsLauncher
                 MatchFound = true;
                 Bf2webCheckbox.Checked = true;
                 Bf2webAddress.Text = HostFile.Lines["bf2web.gamespy.com"];
-                BF2webGroupBox.Enabled = false;
             }
 
             // Did we find any matches?
@@ -109,6 +107,9 @@ namespace BF2statisticsLauncher
             {
                 UdpateStatus("- Found old redirect data in HOSTS file.");
                 isStarted = true;
+                LockGroups();
+
+                iButton.Enabled = true;
                 iButton.Text = "Remove HOSTS Redirect";
 
                 UdpateStatus("- Locking HOSTS file");
