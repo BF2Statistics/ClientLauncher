@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="KeyValueItem.cs" />
     <Compile Include="Launcher.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -205,7 +205,7 @@
             this.ParamBox.Name = "ParamBox";
             this.ParamBox.Size = new System.Drawing.Size(240, 20);
             this.ParamBox.TabIndex = 3;
-            this.ParamBox.Text = "+menu 1 +fullscreen 1";
+            this.ParamBox.Text = "+fullscreen 1";
             // 
             // label3
             // 
@@ -222,7 +222,7 @@
             this.ModSelectList.FormattingEnabled = true;
             this.ModSelectList.Location = new System.Drawing.Point(271, 19);
             this.ModSelectList.Name = "ModSelectList";
-            this.ModSelectList.Size = new System.Drawing.Size(120, 21);
+            this.ModSelectList.Size = new System.Drawing.Size(175, 21);
             this.ModSelectList.TabIndex = 1;
             // 
             // LButton
@@ -250,7 +250,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Launcher";
-            this.Text = "BF2 Statistics Client Launcher v1.3a";
+            this.Text = "BF2 Statistics Client Launcher v1.4";
             this.BF2webGroupBox.ResumeLayout(false);
             this.BF2webGroupBox.PerformLayout();
             this.GpcmGroupBox.ResumeLayout(false);

@@ -20,14 +20,18 @@ namespace BF2statisticsLauncher
             Fs = File.GetAccessControl(FilePath);
 
             // Make sure we can read the file amd write to it!
-            try {
+            try
+            {
                 UnLock(); // Unlock
                 OrigContents = new List<string>(File.ReadAllLines(FilePath));
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 Log(e.Message);
-                string message = "Unable to READ the HOST file!" + Environment.NewLine + Environment.NewLine
-                    + "Exception Message: " + e.Message;
+                string message = "Unable to READ the HOST file! Please make sure this program is being ran as an administrator, or "
+                    + "modify your HOSTS file permissions, allowing this program to read/modify it."
+                    + Environment.NewLine + Environment.NewLine
+                    + "Error Message: " + e.Message;
                 throw new Exception(message);
             }
 
@@ -44,10 +48,8 @@ namespace BF2statisticsLauncher
             }
             catch
             {
-                string message =
-                    "HOSTS file is not WRITABLE! Please make sure to replace your HOSTS file with " +
-                    "the one provided in the release package, or remove your current permissions from the HOSTS file. " +
-                    "It may also help to run this program as an administrator.";
+                string message = "HOSTS file is not WRITABLE! Please make sure this program is being ran as an administrator, or "
+                    + "modify your HOSTS file permissions, allowing this program to read/modify it.";
                 throw new Exception(message);
             }
 
@@ -130,7 +132,7 @@ namespace BF2statisticsLauncher
             }
 
             // Remove old dirty redirects from the Backup
-            for (int i = 0; i < OrigContents.Count; i++)
+            for (int i = OrigContents.Count -1; i >= 0; i--)
             {
                 if (OrigContents[i].Contains("bf2web.gamespy.com"))
                     OrigContents.RemoveAt(i);

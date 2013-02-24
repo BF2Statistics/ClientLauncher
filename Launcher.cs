@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 using System.Net.NetworkInformation;
 using System.IO;
 using System.Reflection;
+using System.Xml;
 
 namespace BF2statisticsLauncher
 {
@@ -411,7 +412,7 @@ namespace BF2statisticsLauncher
         private void LButton_Click(object sender, EventArgs e)
         {
             // Get our current mod
-            string mod = ModSelectList.SelectedItem.ToString();
+            string mod = ((KeyValueItem)ModSelectList.SelectedItem).Key;
 
             // Start new BF2 proccess
             ProcessStartInfo Info = new ProcessStartInfo();
@@ -429,19 +430,39 @@ namespace BF2statisticsLauncher
             string path = Path.Combine(Root, "mods");
             int pathLength = path.Length;
             Mods = Directory.GetDirectories(path);
+            XmlDocument Desc = new XmlDocument();
 
-            // Add each mod to the select list
+            // Proccess each installed mod
             int i = 0;
             foreach (string D in Mods)
             {
-                // Add the mod to the list of items
-                string mod = D.Remove(0, pathLength + 1);
-                ModSelectList.Items.Add(new Item(mod, i));
+                // Get just the mod folder name
+                string ModName = D.Remove(0, path.Length + 1);
 
-                // Set the selected index if the mod is bf2
-                if (mod == "bf2")
-                    ModSelectList.SelectedIndex = i;
-                i++;
+                // Make sure we have a mod description file
+                string DescFile = Path.Combine(D, "mod.desc");
+                if (!File.Exists(DescFile))
+                    continue;
+
+                // Get the actual name of the mod
+                try
+                {
+                    Desc.Load(DescFile);
+                    XmlNodeList Node = Desc.GetElementsByTagName("title");
+                    string Name = Node[0].InnerText.Trim();
+                    if (Name == "MODDESC_BF2_TITLE")
+                    {
+                        ModSelectList.Items.Add(new KeyValueItem(ModName, "Battlefield 2"));
+                        ModSelectList.SelectedIndex = ModSelectList.Items.Count - 1;
+                        continue;
+                    }
+                    else if (Name == "MODDESC_XP_TITLE")
+                        Name = "Battlefield 2: Special Forces";
+
+                    ModSelectList.Items.Add(new KeyValueItem(ModName, Name));
+                    i++;
+                }
+                catch { }
             }
 
             // Do we have any mods?
