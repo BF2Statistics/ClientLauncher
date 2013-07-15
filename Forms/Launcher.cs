@@ -13,6 +13,7 @@ using System.Net.NetworkInformation;
 using System.IO;
 using System.Reflection;
 using System.Xml;
+using System.Security.Principal;
 using BF2statisticsLauncher.Properties;
 
 namespace BF2statisticsLauncher
@@ -26,11 +27,6 @@ namespace BF2statisticsLauncher
         /// Is the hosts redirect active?
         /// </summary>
         private bool RedirectsEnabled = false;
-
-        /// <summary>
-        /// The HOSTS file object
-        /// </summary>
-        private HostsFile HostFile;
 
         /// <summary>
         /// Array of mods found in the "bf2/mods" folder
@@ -51,6 +47,18 @@ namespace BF2statisticsLauncher
         /// Background worker used for pinging the redirects, preventing the GUI from locking up.
         /// </summary>
         private static BackgroundWorker HostsWorker;
+
+        /// <summary>
+        /// Returns whether the app is running in administrator mode.
+        /// </summary>
+        public static bool IsAdministrator
+        {
+            get
+            {
+                WindowsPrincipal wp = new WindowsPrincipal(WindowsIdentity.GetCurrent());
+                return wp.IsInRole(WindowsBuiltInRole.Administrator);
+            }
+        }
 
         public Launcher()
         {
@@ -74,6 +82,10 @@ namespace BF2statisticsLauncher
 
             // Default select mode items
             GetBF2ModsList();
+
+            // Add administrator title to program title bar
+            if (IsAdministrator)
+                this.Text += " (Administrator)";
         }
 
         #region Startup Methods
