@@ -37,36 +37,36 @@
             this.label2 = new System.Windows.Forms.Label();
             this.GpcmCheckbox = new System.Windows.Forms.CheckBox();
             this.GpcmAddress = new System.Windows.Forms.TextBox();
-            this.iButton = new System.Windows.Forms.Button();
+            this.RedirectButton = new System.Windows.Forms.Button();
             this.LogBox = new System.Windows.Forms.TextBox();
             this.LogWindow = new System.Windows.Forms.GroupBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.LaunchWindow = new System.Windows.Forms.GroupBox();
             this.label4 = new System.Windows.Forms.Label();
             this.ParamBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.ModSelectList = new System.Windows.Forms.ComboBox();
             this.LButton = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.BF2webGroupBox.SuspendLayout();
             this.GpcmGroupBox.SuspendLayout();
             this.LogWindow.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.LaunchWindow.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // Bf2webCheckbox
             // 
             this.Bf2webCheckbox.AutoSize = true;
-            this.Bf2webCheckbox.Location = new System.Drawing.Point(10, 19);
+            this.Bf2webCheckbox.Location = new System.Drawing.Point(10, 23);
             this.Bf2webCheckbox.Name = "Bf2webCheckbox";
-            this.Bf2webCheckbox.Size = new System.Drawing.Size(245, 17);
+            this.Bf2webCheckbox.Size = new System.Drawing.Size(127, 17);
             this.Bf2webCheckbox.TabIndex = 0;
-            this.Bf2webCheckbox.Text = "Redirect BF2web.Gamespy.com (Stats Server)";
+            this.Bf2webCheckbox.Text = "Redirect Stats Server";
             this.Bf2webCheckbox.UseVisualStyleBackColor = true;
             // 
             // Bf2webAddress
             // 
-            this.Bf2webAddress.Location = new System.Drawing.Point(97, 42);
+            this.Bf2webAddress.Location = new System.Drawing.Point(97, 46);
             this.Bf2webAddress.MaxLength = 100;
             this.Bf2webAddress.Name = "Bf2webAddress";
             this.Bf2webAddress.Size = new System.Drawing.Size(145, 20);
@@ -78,17 +78,17 @@
             this.BF2webGroupBox.Controls.Add(this.label1);
             this.BF2webGroupBox.Controls.Add(this.Bf2webCheckbox);
             this.BF2webGroupBox.Controls.Add(this.Bf2webAddress);
-            this.BF2webGroupBox.Location = new System.Drawing.Point(12, 120);
+            this.BF2webGroupBox.Location = new System.Drawing.Point(12, 85);
             this.BF2webGroupBox.Name = "BF2webGroupBox";
             this.BF2webGroupBox.Size = new System.Drawing.Size(260, 78);
             this.BF2webGroupBox.TabIndex = 3;
             this.BF2webGroupBox.TabStop = false;
-            this.BF2webGroupBox.Text = "BF2 Stats Server";
+            this.BF2webGroupBox.Text = "Battlefield 2 Stats Server";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(10, 43);
+            this.label1.Location = new System.Drawing.Point(10, 47);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(86, 13);
             this.label1.TabIndex = 3;
@@ -99,7 +99,7 @@
             this.GpcmGroupBox.Controls.Add(this.label2);
             this.GpcmGroupBox.Controls.Add(this.GpcmCheckbox);
             this.GpcmGroupBox.Controls.Add(this.GpcmAddress);
-            this.GpcmGroupBox.Location = new System.Drawing.Point(12, 211);
+            this.GpcmGroupBox.Location = new System.Drawing.Point(12, 176);
             this.GpcmGroupBox.Name = "GpcmGroupBox";
             this.GpcmGroupBox.Size = new System.Drawing.Size(260, 78);
             this.GpcmGroupBox.TabIndex = 4;
@@ -109,7 +109,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(10, 43);
+            this.label2.Location = new System.Drawing.Point(10, 47);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(86, 13);
             this.label2.TabIndex = 3;
@@ -118,7 +118,7 @@
             // GpcmCheckbox
             // 
             this.GpcmCheckbox.AutoSize = true;
-            this.GpcmCheckbox.Location = new System.Drawing.Point(10, 19);
+            this.GpcmCheckbox.Location = new System.Drawing.Point(10, 23);
             this.GpcmCheckbox.Name = "GpcmCheckbox";
             this.GpcmCheckbox.Size = new System.Drawing.Size(134, 17);
             this.GpcmCheckbox.TabIndex = 0;
@@ -127,26 +127,26 @@
             // 
             // GpcmAddress
             // 
-            this.GpcmAddress.Location = new System.Drawing.Point(97, 42);
+            this.GpcmAddress.Location = new System.Drawing.Point(97, 46);
             this.GpcmAddress.MaxLength = 100;
             this.GpcmAddress.Name = "GpcmAddress";
             this.GpcmAddress.Size = new System.Drawing.Size(145, 20);
             this.GpcmAddress.TabIndex = 2;
             this.GpcmAddress.Text = "localhost";
             // 
-            // iButton
+            // RedirectButton
             // 
-            this.iButton.Location = new System.Drawing.Point(12, 299);
-            this.iButton.Name = "iButton";
-            this.iButton.Size = new System.Drawing.Size(260, 27);
-            this.iButton.TabIndex = 5;
-            this.iButton.Text = "Begin HOSTS Redirect";
-            this.iButton.UseVisualStyleBackColor = true;
-            this.iButton.Click += new System.EventHandler(this.iButton_Click);
+            this.RedirectButton.Location = new System.Drawing.Point(12, 264);
+            this.RedirectButton.Name = "RedirectButton";
+            this.RedirectButton.Size = new System.Drawing.Size(260, 27);
+            this.RedirectButton.TabIndex = 5;
+            this.RedirectButton.Text = "Begin HOSTS Redirect";
+            this.RedirectButton.UseVisualStyleBackColor = true;
+            this.RedirectButton.Click += new System.EventHandler(this.RedirectButton_Click);
             // 
             // LogBox
             // 
-            this.LogBox.BackColor = System.Drawing.SystemColors.Control;
+            this.LogBox.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.LogBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.LogBox.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.LogBox.Enabled = false;
@@ -160,21 +160,12 @@
             // LogWindow
             // 
             this.LogWindow.Controls.Add(this.LogBox);
-            this.LogWindow.Location = new System.Drawing.Point(280, 120);
+            this.LogWindow.Location = new System.Drawing.Point(280, 85);
             this.LogWindow.Name = "LogWindow";
             this.LogWindow.Size = new System.Drawing.Size(260, 205);
             this.LogWindow.TabIndex = 9;
             this.LogWindow.TabStop = false;
             this.LogWindow.Text = "Status";
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::BF2statisticsLauncher.Properties.Resources.BF2Redirect;
-            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(555, 110);
-            this.pictureBox1.TabIndex = 10;
-            this.pictureBox1.TabStop = false;
             // 
             // LaunchWindow
             // 
@@ -183,7 +174,7 @@
             this.LaunchWindow.Controls.Add(this.label3);
             this.LaunchWindow.Controls.Add(this.ModSelectList);
             this.LaunchWindow.Controls.Add(this.LButton);
-            this.LaunchWindow.Location = new System.Drawing.Point(14, 337);
+            this.LaunchWindow.Location = new System.Drawing.Point(14, 302);
             this.LaunchWindow.Name = "LaunchWindow";
             this.LaunchWindow.Size = new System.Drawing.Size(525, 76);
             this.LaunchWindow.TabIndex = 11;
@@ -231,35 +222,46 @@
             this.LButton.Name = "LButton";
             this.LButton.Size = new System.Drawing.Size(157, 47);
             this.LButton.TabIndex = 0;
-            this.LButton.Text = "Launch BF2";
+            this.LButton.Text = "Launch Battlefield 2";
             this.LButton.UseVisualStyleBackColor = true;
             this.LButton.Click += new System.EventHandler(this.LButton_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pictureBox1.Image = global::BF2statisticsLauncher.Properties.Resources.BF2Stats_Logo;
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(554, 75);
+            this.pictureBox1.TabIndex = 12;
+            this.pictureBox1.TabStop = false;
             // 
             // Launcher
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(554, 422);
-            this.Controls.Add(this.LaunchWindow);
+            this.BackColor = System.Drawing.SystemColors.Window;
+            this.ClientSize = new System.Drawing.Size(554, 387);
             this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.LaunchWindow);
             this.Controls.Add(this.LogWindow);
-            this.Controls.Add(this.iButton);
+            this.Controls.Add(this.RedirectButton);
             this.Controls.Add(this.GpcmGroupBox);
             this.Controls.Add(this.BF2webGroupBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Launcher";
-            this.Text = "BF2 Statistics Client Launcher v1.4";
+            this.Text = "Battlefield 2 Statistics Client Launcher v1.5";
             this.BF2webGroupBox.ResumeLayout(false);
             this.BF2webGroupBox.PerformLayout();
             this.GpcmGroupBox.ResumeLayout(false);
             this.GpcmGroupBox.PerformLayout();
             this.LogWindow.ResumeLayout(false);
             this.LogWindow.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.LaunchWindow.ResumeLayout(false);
             this.LaunchWindow.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -274,16 +276,16 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox GpcmCheckbox;
         private System.Windows.Forms.TextBox GpcmAddress;
-        private System.Windows.Forms.Button iButton;
+        private System.Windows.Forms.Button RedirectButton;
         private System.Windows.Forms.TextBox LogBox;
         private System.Windows.Forms.GroupBox LogWindow;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.GroupBox LaunchWindow;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox ParamBox;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox ModSelectList;
         private System.Windows.Forms.Button LButton;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
 

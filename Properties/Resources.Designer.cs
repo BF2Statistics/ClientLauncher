@@ -60,9 +60,16 @@ namespace BF2statisticsLauncher.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap BF2Redirect {
+        internal static System.Drawing.Bitmap BF2Stats_Logo {
             get {
-                object obj = ResourceManager.GetObject("BF2Redirect", resourceCulture);
+                object obj = ResourceManager.GetObject("BF2Stats_Logo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap vistaerror {
+            get {
+                object obj = ResourceManager.GetObject("vistaerror", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

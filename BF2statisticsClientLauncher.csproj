@@ -49,19 +49,38 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="KeyValueItem.cs" />
-    <Compile Include="Launcher.cs">
+    <Compile Include="ExceptionHandler.cs" />
+    <Compile Include="Forms\ExceptionForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Launcher.Designer.cs">
-      <DependentUpon>Launcher.cs</DependentUpon>
+    <Compile Include="Forms\ExceptionForm.designer.cs">
+      <DependentUpon>ExceptionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\LoadingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LoadingForm.designer.cs">
+      <DependentUpon>LoadingForm.cs</DependentUpon>
     </Compile>
     <Compile Include="HostsFile.cs" />
+    <Compile Include="KeyValueItem.cs" />
+    <Compile Include="Forms\Launcher.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Launcher.Designer.cs">
+      <DependentUpon>Launcher.cs</DependentUpon>
+    </Compile>
     <Compile Include="Item.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Launcher.resx">
+    <EmbeddedResource Include="Forms\ExceptionForm.resx">
+      <DependentUpon>ExceptionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Launcher.resx">
       <DependentUpon>Launcher.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LoadingForm.resx">
+      <DependentUpon>LoadingForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -73,8 +92,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <Compile Include="Properties\Settings.Designer.cs">
@@ -85,8 +105,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Battlefield 2 icon #2.ico" />
-    <Content Include="Tools\SetACL.exe" />
+    <None Include="Resources\vistaerror.png" />
+    <None Include="Resources\BF2Stats_Logo.jpg" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
