@@ -252,7 +252,8 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Launcher";
-            this.Text = "Battlefield 2 Statistics Client Launcher v1.5";
+            this.Text = "Battlefield 2 Statistics Client Launcher v1.6";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Launcher_FormClosing);
             this.BF2webGroupBox.ResumeLayout(false);
             this.BF2webGroupBox.PerformLayout();
             this.GpcmGroupBox.ResumeLayout(false);

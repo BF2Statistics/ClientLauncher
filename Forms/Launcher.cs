@@ -110,7 +110,7 @@ namespace BF2statisticsLauncher
                 bool MatchFound = false;
 
                 // Login server redirect
-                if (HostsFile.Contains("gpcm.gamespy.com"))
+                if (HostsFile.HasEntry("gpcm.gamespy.com"))
                 {
                     MatchFound = true;
                     GpcmCheckbox.Checked = true;
@@ -118,7 +118,7 @@ namespace BF2statisticsLauncher
                 }
 
                 // Stat server redirect
-                if (HostsFile.Contains("bf2web.gamespy.com"))
+                if (HostsFile.HasEntry("bf2web.gamespy.com"))
                 {
                     MatchFound = true;
                     Bf2webCheckbox.Checked = true;
@@ -643,6 +643,16 @@ namespace BF2statisticsLauncher
         private void MyForm_CloseOnStart(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        /// <summary>
+        /// Event fired when the UI is closing, Unlocks the HostsFile
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Launcher_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            HostsFile.UnLock();
         }
     }
 }
