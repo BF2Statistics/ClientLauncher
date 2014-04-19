@@ -67,6 +67,13 @@ namespace BF2statisticsLauncher.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Settings {
+            get {
+                object obj = ResourceManager.GetObject("Settings", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap vistaerror {
             get {
                 object obj = ResourceManager.GetObject("vistaerror", resourceCulture);

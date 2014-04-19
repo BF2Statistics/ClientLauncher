@@ -155,7 +155,11 @@ namespace BF2statisticsLauncher
 
                 // Add line
                 if (M.Success)
-                    Entries.Add(M.Groups["hostname"].Value.ToLower().Trim(), M.Groups["address"].Value.Trim());
+                {
+                    string hostname = M.Groups["hostname"].Value.ToLower();
+                    if (!Entries.ContainsKey(hostname))
+                        Entries.Add(hostname, M.Groups["address"].Value);
+                }
             }
 
             // Make sure we have a localhost loopback! Save aswell, so its available for future

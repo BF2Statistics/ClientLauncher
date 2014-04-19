@@ -580,6 +580,18 @@ namespace BF2statisticsLauncher
         }
 
         /// <summary>
+        /// Event fired when the Params Button is clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ClientParamsBtn_Click(object sender, EventArgs e)
+        {
+            ClientParamsForm F = new ClientParamsForm(ParamBox.Text);
+            if (F.ShowDialog() == DialogResult.OK)
+                ParamBox.Text = ClientParamsForm.ParamString;
+        }
+
+        /// <summary>
         /// Adds a new line to the "status" window on the GUI
         /// </summary>
         /// <param name="message">The message to print</param>

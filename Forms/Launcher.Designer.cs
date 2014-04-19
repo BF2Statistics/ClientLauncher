@@ -47,6 +47,7 @@
             this.ModSelectList = new System.Windows.Forms.ComboBox();
             this.LButton = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.ClientParamsBtn = new System.Windows.Forms.Button();
             this.BF2webGroupBox.SuspendLayout();
             this.GpcmGroupBox.SuspendLayout();
             this.LogWindow.SuspendLayout();
@@ -169,6 +170,7 @@
             // 
             // LaunchWindow
             // 
+            this.LaunchWindow.Controls.Add(this.ClientParamsBtn);
             this.LaunchWindow.Controls.Add(this.label4);
             this.LaunchWindow.Controls.Add(this.ParamBox);
             this.LaunchWindow.Controls.Add(this.label3);
@@ -184,7 +186,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(178, 47);
+            this.label4.Location = new System.Drawing.Point(175, 47);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(90, 13);
             this.label4.TabIndex = 4;
@@ -192,16 +194,16 @@
             // 
             // ParamBox
             // 
-            this.ParamBox.Location = new System.Drawing.Point(271, 46);
+            this.ParamBox.Location = new System.Drawing.Point(268, 46);
             this.ParamBox.Name = "ParamBox";
-            this.ParamBox.Size = new System.Drawing.Size(240, 20);
+            this.ParamBox.Size = new System.Drawing.Size(220, 20);
             this.ParamBox.TabIndex = 3;
             this.ParamBox.Text = "+fullscreen 1";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(192, 22);
+            this.label3.Location = new System.Drawing.Point(189, 22);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(76, 13);
             this.label3.TabIndex = 2;
@@ -211,14 +213,14 @@
             // 
             this.ModSelectList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ModSelectList.FormattingEnabled = true;
-            this.ModSelectList.Location = new System.Drawing.Point(271, 19);
+            this.ModSelectList.Location = new System.Drawing.Point(268, 19);
             this.ModSelectList.Name = "ModSelectList";
             this.ModSelectList.Size = new System.Drawing.Size(175, 21);
             this.ModSelectList.TabIndex = 1;
             // 
             // LButton
             // 
-            this.LButton.Location = new System.Drawing.Point(15, 19);
+            this.LButton.Location = new System.Drawing.Point(10, 19);
             this.LButton.Name = "LButton";
             this.LButton.Size = new System.Drawing.Size(157, 47);
             this.LButton.TabIndex = 0;
@@ -236,6 +238,16 @@
             this.pictureBox1.TabIndex = 12;
             this.pictureBox1.TabStop = false;
             // 
+            // ClientParamsBtn
+            // 
+            this.ClientParamsBtn.Image = global::BF2statisticsLauncher.Properties.Resources.Settings;
+            this.ClientParamsBtn.Location = new System.Drawing.Point(492, 43);
+            this.ClientParamsBtn.Name = "ClientParamsBtn";
+            this.ClientParamsBtn.Size = new System.Drawing.Size(24, 24);
+            this.ClientParamsBtn.TabIndex = 5;
+            this.ClientParamsBtn.UseVisualStyleBackColor = true;
+            this.ClientParamsBtn.Click += new System.EventHandler(this.ClientParamsBtn_Click);
+            // 
             // Launcher
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -252,7 +264,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Launcher";
-            this.Text = "Battlefield 2 Statistics Client Launcher v1.6";
+            this.Text = "Battlefield 2 Statistics Client Launcher v1.7";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Launcher_FormClosing);
             this.BF2webGroupBox.ResumeLayout(false);
             this.BF2webGroupBox.PerformLayout();
@@ -287,6 +299,7 @@
         private System.Windows.Forms.ComboBox ModSelectList;
         private System.Windows.Forms.Button LButton;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Button ClientParamsBtn;
     }
 }
 
