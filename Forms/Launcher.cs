@@ -60,6 +60,11 @@ namespace BF2statisticsLauncher
             }
         }
 
+        /// <summary>
+        /// The available server
+        /// </summary>
+        private Bf2Available AvailServer;
+
         public Launcher()
         {
             InitializeComponent();
@@ -86,6 +91,13 @@ namespace BF2statisticsLauncher
             // Add administrator title to program title bar
             if (IsAdministrator)
                 this.Text += " (Administrator)";
+
+            // Start avail server
+            try
+            {
+                AvailServer = new Bf2Available();
+            }
+            catch { }
         }
 
         #region Startup Methods
@@ -355,6 +367,10 @@ namespace BF2statisticsLauncher
                 try
                 {
                     // Save lines to hosts file
+                    HostsFile.Set("motd.gamespy.com", IPAddress.Loopback.ToString());
+                    HostsFile.Set("master.gamespy.com", IPAddress.Loopback.ToString());
+                    HostsFile.Set("battlefield2.ms14.gamespy.com", IPAddress.Loopback.ToString());
+                    HostsFile.Set("battlefield2.available.gamespy.com", IPAddress.Loopback.ToString());
                     HostsFile.Save();
                     UpdateStatus("Success!");
 
@@ -427,6 +443,10 @@ namespace BF2statisticsLauncher
                 HostsFile.Remove("bf2web.gamespy.com");
                 HostsFile.Remove("gpcm.gamespy.com");
                 HostsFile.Remove("gpsp.gamespy.com");
+                HostsFile.Remove("motd.gamespy.com");
+                HostsFile.Remove("master.gamespy.com");
+                HostsFile.Remove("battlefield2.ms14.gamespy.com");
+                HostsFile.Remove("battlefield2.available.gamespy.com");
                 HostsFile.Save();
                 UpdateStatus("Success!");
             }

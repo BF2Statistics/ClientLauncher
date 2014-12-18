@@ -41,13 +41,13 @@
             this.LogBox = new System.Windows.Forms.TextBox();
             this.LogWindow = new System.Windows.Forms.GroupBox();
             this.LaunchWindow = new System.Windows.Forms.GroupBox();
+            this.ClientParamsBtn = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.ParamBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.ModSelectList = new System.Windows.Forms.ComboBox();
             this.LButton = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.ClientParamsBtn = new System.Windows.Forms.Button();
             this.BF2webGroupBox.SuspendLayout();
             this.GpcmGroupBox.SuspendLayout();
             this.LogWindow.SuspendLayout();
@@ -183,6 +183,16 @@
             this.LaunchWindow.TabStop = false;
             this.LaunchWindow.Text = "BF2 Launcher";
             // 
+            // ClientParamsBtn
+            // 
+            this.ClientParamsBtn.Image = global::BF2statisticsLauncher.Properties.Resources.Settings;
+            this.ClientParamsBtn.Location = new System.Drawing.Point(492, 43);
+            this.ClientParamsBtn.Name = "ClientParamsBtn";
+            this.ClientParamsBtn.Size = new System.Drawing.Size(24, 24);
+            this.ClientParamsBtn.TabIndex = 5;
+            this.ClientParamsBtn.UseVisualStyleBackColor = true;
+            this.ClientParamsBtn.Click += new System.EventHandler(this.ClientParamsBtn_Click);
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -215,7 +225,7 @@
             this.ModSelectList.FormattingEnabled = true;
             this.ModSelectList.Location = new System.Drawing.Point(268, 19);
             this.ModSelectList.Name = "ModSelectList";
-            this.ModSelectList.Size = new System.Drawing.Size(175, 21);
+            this.ModSelectList.Size = new System.Drawing.Size(220, 21);
             this.ModSelectList.TabIndex = 1;
             // 
             // LButton
@@ -238,16 +248,6 @@
             this.pictureBox1.TabIndex = 12;
             this.pictureBox1.TabStop = false;
             // 
-            // ClientParamsBtn
-            // 
-            this.ClientParamsBtn.Image = global::BF2statisticsLauncher.Properties.Resources.Settings;
-            this.ClientParamsBtn.Location = new System.Drawing.Point(492, 43);
-            this.ClientParamsBtn.Name = "ClientParamsBtn";
-            this.ClientParamsBtn.Size = new System.Drawing.Size(24, 24);
-            this.ClientParamsBtn.TabIndex = 5;
-            this.ClientParamsBtn.UseVisualStyleBackColor = true;
-            this.ClientParamsBtn.Click += new System.EventHandler(this.ClientParamsBtn_Click);
-            // 
             // Launcher
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -264,7 +264,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Launcher";
-            this.Text = "Battlefield 2 Statistics Client Launcher v1.7";
+            this.Text = "Battlefield 2 Statistics Client Launcher v1.8";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Launcher_FormClosing);
             this.BF2webGroupBox.ResumeLayout(false);
             this.BF2webGroupBox.PerformLayout();

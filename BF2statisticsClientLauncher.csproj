@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bf2Available.cs" />
     <Compile Include="ExceptionHandler.cs" />
     <Compile Include="Forms\ClientParamsForm.cs">
       <SubType>Form</SubType>
